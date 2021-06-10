@@ -12,6 +12,5 @@ int main ()
 	line = malloc(sizeof(char) * 100);
 	fd = open("yo", O_RDONLY);
 	ret = get_next_line(fd, &line);
-	printf("%s\n", line);
 
 }

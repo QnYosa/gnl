@@ -6,7 +6,7 @@
 /*   By: dyoula <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 13:04:28 by dyoula            #+#    #+#             */
-/*   Updated: 2021/06/07 20:04:28 by dyoula           ###   ########.fr       */
+/*   Updated: 2021/06/10 18:54:01 by dyoula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,26 @@
 
 int get_next_line(int fd, char **line)
 {
-	char *yo;
-	char *str;
-	static int i;
-	int ret;
+	static char	*buffer;
+	char		*str;
+	int			ret;
 	
-	if (!fd)
+	if (fd < 0)
 		return (-1);
-	yo = malloc(sizeof(char) * BUFFER_SIZE);
-	read (fd, yo, BUFFER_SIZE);
-	i = 0;
-	while (yo[i] != '\n' && yo[i])
-		i++;
-	str = malloc(sizeof(char) * i + 1);
-	ft_strlcpy(str, yo, i + 1);
-	*line = str;
-	free(str);
-	return (ret);
+	//printf("%s \n\nstop \n", *line);
+	buffer = malloc(sizeof(char *) * BUFFER_SIZE + 1);
+	ret = read (fd, buffer, BUFFER_SIZE);
+	//printf("%s", buffer);
+	str = ft_strdup("");
+	str = buffer;
+	printf ("%s", str);
+	line = &str;
+	return (1);
 }
+
+/*
+buff = malloc(sizeof(char) * BUFFER_SIZE);
+	read (fd, buff, BUFFER_SIZE);
+
+
+	*/

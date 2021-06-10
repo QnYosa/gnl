@@ -31,11 +31,17 @@ void	ft_putnbr(int nb)
 	}
 }
 
-void	ft_putstr(char *str)
+void	ft_putstr_fd(char *s, int fd)
 {
-	while (*str)
-		write(1, str++, 1);
+	int	i;
+
+	i = -1;
+	if (!s)
+		return ;
+	while (s[++i] && fd >= 0)
+		ft_putchar_fd(s[i], fd);
 }
+
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
@@ -64,4 +70,51 @@ size_t	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+char	*ft_strdup(char *str)
+{
+	int		i;
+	char	*n_str;
+
+	i = 0;
+	while (str[i])
+		i++;
+	n_str = malloc(sizeof(char) * (i + 1));
+	if (!n_str)
+		return (NULL);
+	i = -1;
+	while (str[++i])
+		n_str[i] = str[i];
+	n_str[i] = 0;
+	return (n_str);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*str;
+	int		i;
+	int		j;
+	int		len;
+
+	i = -1;
+	j = -1;
+	if (!s1 || !s2)
+		return (NULL);
+	str = NULL;
+	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	str = (char *) malloc(sizeof(char) * len);
+	if (!str)
+		return (NULL);
+	while (s1[++i])
+		str[i] = s1[i];
+	while (s2[++j])
+		str[i + j] = s2[j];
+	str[i + j] = 0;
+	return (str);
 }
