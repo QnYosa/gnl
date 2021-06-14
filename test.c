@@ -1,21 +1,29 @@
-int  test(char *str)
+#include <stdio.h>
+#include <stdlib.h>
+
+char *no_backslash(char *tmp)
 {
-	static int i = -1;
-	i++;
-	while (str[i])
+	int		i;
+	char	*new;
+
+	i = 0;
+	while (*tmp != '\n')
+		tmp++;
+	tmp++;
+	while (tmp[i])
+		i++;
+	new = malloc(sizeof(char) * (i + 1));
+	i = 0;
+	while (tmp[i])
 	{
-		if (str[i] == 'l')
-			return (i);
+		tmp[i] = new[i];
 		i++;
 	}
-	return (0);
+	return (new);
 }
 
 int main ()
 {
-	static char str [] = "hola lo llamo";
-	printf("%d\n", test(str));
-	//printf("%d\n", test(str));
-	//printf("%d\n", test(str));
-	//printf("%d\n", test(str));
+	char tmp [] = "ole\n hola";
+	printf("%s", no_backslash(tmp));
 }
