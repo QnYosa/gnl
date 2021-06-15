@@ -7,6 +7,10 @@
 #include <stddef.h>
 //#define	BUFFER_SIZE 5
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 64
+# endif
+
 int get_next_line(int fd, char **line);
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(char *str);

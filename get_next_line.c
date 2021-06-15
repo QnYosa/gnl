@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dyoula <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: sbeaujar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/07 13:04:28 by dyoula            #+#    #+#             */
-/*   Updated: 2021/06/14 20:04:22 by dyoula           ###   ########.fr       */
+/*   Updated: 2021/06/15 17:04:25 by sbeaujar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ void no_backslash(char *line)
 	}
 }
 
-char	*after_nl(char *line, char *after_newline)
+char	*after_nl(char *line)
 {
 	int	i;
-
+	char *temp;
+	
 	i = 0;
 	if (!line)
 		return (NULL);
@@ -37,51 +38,62 @@ char	*after_nl(char *line, char *after_newline)
 	line++;
 	while (line[i] != '\n' && line[i])
 		i++;
-	after_newline = malloc(sizeof(char) * (i + 1));
-	if (!after_newline)
+/*	if (after_newline)
+	{
+		free(after_newline);
+		after_newline = 0;
+	}*/
+	temp = malloc(sizeof(char) * (i + 1));
+	if (!temp)
+	{
+	//	free(after_newline);
 		return (NULL);
+	}
 	i = 0;
 	while (line[i] != '\n' && line[i])
 	{
-		after_newline[i] = line[i];
+		temp[i] = line[i];
 		i++;
 	}
-	return (after_newline);
+	temp[i] = '\0';
+	//free (after_newline);
+	return (temp);
 }
 
 int get_next_line(int fd, char **line)
 {
 	char		buffer[BUFFER_SIZE + 1];
 	static char 	*after_newline;
-	char			*tmp;
+	// char			*tmp;
 	int				ret;
 	
 	ret = 1;
 	if (fd < 0 || !line || BUFFER_SIZE <= 0 || read(fd, "", 0) == - 1)
 		return (-1);
-	if (after_newline)
-		tmp = ft_strdup(after_newline);
-	else
-		tmp = ft_strdup("");
-	while (!(ft_strchr(tmp, '\n') && ret != 0))
+	if (!after_newline)
+		after_newline = ft_strdup("");
+	// if (after_newline)
+	// 	tmp = ft_strdup(after_newline);
+	// else
+	// 	tmp = ft_strdup("");
+	while (!(ft_strchr(after_newline, '\n') && ret != 0))
 	{
 		ret = read(fd, buffer, BUFFER_SIZE);
 		buffer[ret] = '\0';
 		if (ret == 0)
 		{
-			*line = ft_strdup(tmp);
-			free(tmp);
-			tmp = NULL;
+			*line = ft_strdup(after_newline);
 			free(after_newline);
 			after_newline = NULL;
 			return (0);
 		}
-		tmp = ft_strjoin(tmp, buffer);
+		after_newline = ft_strjoin(after_newline, buffer);
 	}
-	*line = ft_strdup(tmp);
-	after_newline = after_nl(*line, after_newline);
+	*line = ft_strdup(after_newline);
+	//after_newline + position +  du '\n' = ft_strdup
+	//strndup after_newline, position
+	free(after_newline);
+	after_newline = after_nl(*line);
 	no_backslash(*line);
-	free(tmp);
-	tmp = NULL;
 	return (1);
 }
