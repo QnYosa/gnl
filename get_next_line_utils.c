@@ -37,7 +37,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = -1;
 	j = -1;
-	if (!s1 || !s2)
+	if (!s1 && !s2)
 		return (NULL);
 	str = NULL;
 	len = ft_strlen(s1) + ft_strlen(s2);
@@ -53,6 +53,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	while (s2[++j])
 		str[i + j] = s2[j];
+	
 	return (str);
 }
 char	*ft_strchr(const char *str, int c)
