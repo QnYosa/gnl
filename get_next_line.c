@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dyoula <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/07 13:04:28 by dyoula            #+#    #+#             */
-/*   Updated: 2021/06/21 19:14:41 by dyoula           ###   ########.fr       */
+/*   Created: 2021/06/18 15:25:22 by dyoula            #+#    #+#             */
+/*   Updated: 2021/06/23 14:17:26 by dyoula           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,29 @@ int	safety(int fd, char **after_newline, char **line)
 	return (1);
 }
 
-char	*last(/*char **tmp,*/ char **after_newline, char **line)
+char	*get_last(char *after_line, char **line)
 {
-	int	i;
 	char	*tmp;
+	int		i;
 
+	tmp = NULL;
 	i = 0;
-	// *tmp = *after_newline;
-	while (*after_newline && (*after_newline)[i] != '\n')
+	while (*after_line && after_line[i] != '\n')
 		i++;
-	*line = ft_strndup(*after_newline, i);
-	// *tmp = ft_strdup(*tmp);
-	tmp = ft_strdup(*after_newline + i);
-	free(*after_newline);
-	return (tmp);
-	// return (after_newline);
+	if (after_line[i] != '\0')
+	{
+		*line = ft_strndup(after_line, i);
+		tmp = ft_strdup(after_line + i + 1);
+		free(after_line);
+		return (tmp);
+	}
+	return (NULL);
 }
 
 int	get_next_line(int fd, char **line)
 {
 	char			buffer[BUFFER_SIZE + 1];
-	// char			*tmp;
-	static char		*after_newline = NULL;
+	static char		*after_newline;
 	int				ret;
 
 	ret = 1;
@@ -51,6 +52,8 @@ int	get_next_line(int fd, char **line)
 	while (!(ft_strchr(after_newline, '\n') && ret != 0))
 	{
 		ret = read(fd, buffer, BUFFER_SIZE);
+		if (ret == -1)
+			return (-1);
 		buffer[ret] = '\0';
 		if (ret == 0)
 		{
@@ -61,7 +64,6 @@ int	get_next_line(int fd, char **line)
 		}
 		after_newline = ft_strjoin(after_newline, buffer);
 	}
-	// tmp = NULL;
-	after_newline = last(/*&tmp, */&after_newline, line);
+	after_newline = get_last(after_newline, line);
 	return (1);
 }
